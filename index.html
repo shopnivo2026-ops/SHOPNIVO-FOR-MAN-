@@ -865,7 +865,7 @@ header .lang-globe .lang-divider{height:13px;width:1px;background:#e5e5e5}
         </div>
         <div class="field">
           <label for="city"><span data-i18n="city">المدينة</span> <b class="required">*</b></label>
-          <div class="input-wrap"><span class="ico"><svg class="svg-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 5-8 11-8 11S4 15 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/></svg></span><select id="city" name="city"><option value="" data-i18n="chooseCity">اختر المدينة</option></select></div><div class="error" id="cityErr"></div>
+          <div class="input-wrap"><span class="ico"><svg class="svg-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 5-8 11-8 11S4 15 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/></svg></span><input id="city" name="city" type="text" list="moroccoCitySuggestions" autocomplete="address-level2" placeholder="اكتب المدينة مباشرة..." aria-label="المدينة"><datalist id="moroccoCitySuggestions"></datalist></div><div class="error" id="cityErr"></div>
         </div>
         <div class="field full">
           <label for="address"><span data-i18n="address">العنوان بالتفصيل</span> <b class="required">*</b></label>
@@ -996,81 +996,17 @@ async function loadAllMoroccoCommunes(){
 }
 
 function fillCities(){
- const s=$('city');
- const oldCities=[...new Set([...(typeof cities!=='undefined'?cities:[]),...[...s.options].slice(1).map(o=>o.value)])];
- s.innerHTML='';
- const placeholder=document.createElement('option');
- placeholder.value='';placeholder.textContent=t('chooseCity');s.appendChild(placeholder);
-
- const entries=[];
- moroccoRegions.forEach(group=>group.areas.forEach(area=>{
-   entries.push({name:area,region:group.region,group:group.region});
- }));
- // Keep the original city choices as well, so existing destinations are not lost.
- oldCities.forEach(name=>{
-   if(!entries.some(x=>normalizeLocationText(x.name)===normalizeLocationText(name))){
-     entries.push({name,region:'',group:'مدن ومراكز إضافية'});
-   }
- });
- entries.sort((a,b)=>a.name.localeCompare(b.name,'ar'));
- entries.forEach(item=>{
-   const o=document.createElement('option');o.value=item.name;o.textContent=item.name;
-   o.dataset.region=item.region;o.dataset.group=item.group;s.appendChild(o);
- });
-
- const wrap=document.createElement('div');wrap.className='city-picker';wrap.id='cityPicker';
- const trigger=document.createElement('button');trigger.type='button';trigger.className='city-picker-trigger';trigger.id='cityPickerTrigger';
- trigger.setAttribute('aria-haspopup','listbox');trigger.setAttribute('aria-expanded','false');
- trigger.innerHTML='<span id="cityPickerValue"></span><span class="city-chevron" aria-hidden="true">▾</span>';
- const menu=document.createElement('div');menu.className='city-picker-menu';menu.id='cityPickerMenu';menu.setAttribute('role','listbox');
- const search=document.createElement('input');search.type='search';search.id='citySearchInput';search.className='city-picker-search';
- search.placeholder=lang==='fr'?'Rechercher une ville ou province…':'ابحث عن المدينة أو الإقليم…';
- search.setAttribute('aria-label',search.placeholder);
- const results=document.createElement('div');results.id='cityPickerResults';
- menu.append(search,results);
- function renderCityOptions(query=''){
-   results.innerHTML='';
-   const q=normalizeLocationText(query);
-   let shown=0,lastGroup='';
-   if(!q){
-     const hint=document.createElement('div');hint.className='city-picker-empty';
-     hint.textContent='اكتب اسم المدينة أو الجماعة للبحث؛ ستظهر النتائج المطابقة فقط.';
-     results.appendChild(hint);return;
-   }
-   [...s.options].slice(1).forEach(opt=>{
-     const parent=opt.dataset.province||opt.dataset.region||opt.dataset.group||'';
-     const hay=normalizeLocationText(opt.value+' '+parent);
-     if(!hay.includes(q))return;
-     if(shown>=40)return;
-     if(opt.dataset.group!==lastGroup){
-       const heading=document.createElement('div');heading.className='city-picker-group';
-       heading.textContent=opt.dataset.group||'مدن ومراكز إضافية';results.appendChild(heading);lastGroup=opt.dataset.group;
-     }
-     const b=document.createElement('button');b.type='button';b.className='city-picker-option';
-     b.textContent=opt.value+((opt.dataset.province||opt.dataset.region)?' — '+(opt.dataset.province||opt.dataset.region):'');
-     b.dataset.value=opt.value;b.setAttribute('role','option');
-     b.setAttribute('aria-selected',String(opt.value===s.value));
-     b.addEventListener('click',()=>{
-       s.value=opt.value;s.dispatchEvent(new Event('change',{bubbles:true}));
-       updateCityPicker();showCityRegionInfo(opt);closeCityPicker();
-     });
-     results.appendChild(b);shown++;
-   });
-   if(!shown){const empty=document.createElement('div');empty.className='city-picker-empty';empty.textContent=lang==='fr'?'Aucun résultat':'لا توجد نتائج مطابقة';results.appendChild(empty);}
- }
- search.addEventListener('input',()=>renderCityOptions(search.value));
- wrap.append(trigger,menu);s.classList.add('city-native-select');s.parentNode.insertBefore(wrap,s.nextSibling);
- const info=document.createElement('div');info.id='cityRegionInfo';info.className='city-region-info';info.hidden=true;
- wrap.insertAdjacentElement('afterend',info);
- trigger.addEventListener('click',()=>{
-   const opening=!wrap.classList.contains('open');closeCityPicker();
-   if(opening){wrap.classList.add('open');trigger.setAttribute('aria-expanded','true');search.value='';renderCityOptions();setTimeout(()=>search.focus(),30);}
- });
- document.addEventListener('click',e=>{if(!wrap.contains(e.target))closeCityPicker()});
- document.addEventListener('keydown',e=>{if(e.key==='Escape')closeCityPicker()});
- updateCityPicker();
- loadAllMoroccoCommunes();
+ const input=$('city'),datalist=$('moroccoCitySuggestions');
+ if(!input||!datalist)return;
+ datalist.innerHTML='';
+ const names=new Set();
+ (typeof cities!=='undefined'?cities:[]).forEach(name=>{if(name)names.add(String(name).trim())});
+ if(typeof moroccoRegions!=='undefined')moroccoRegions.forEach(group=>(group.areas||[]).forEach(name=>{if(name)names.add(String(name).trim())}));
+ [...names].sort((a,b)=>a.localeCompare(b,'ar')).forEach(name=>{const option=document.createElement('option');option.value=name;datalist.appendChild(option);});
+ input.placeholder=lang==='fr'?'Saisissez votre ville…':'اكتب المدينة مباشرة...';
+ input.addEventListener('input',()=>{updateProgress();updateCompleteCue();saveDraft();});
 }
+
 function showCityRegionInfo(opt){
  const box=$('cityRegionInfo');if(!box||!opt)return;
  const province=opt.dataset.province||'';
