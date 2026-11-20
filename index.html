@@ -1653,5 +1653,49 @@ button:disabled{opacity:.55;cursor:not-allowed;}
 }
 </style>
 
+
+<!-- SHOPNIVO RESTORE RELIABLE NATIVE OFFER SELECT 2026-11-20 -->
+<style id="shopnivo-offer-options-visible-v3">
+/* Reliable mobile select: always show the real populated options on tap. */
+#orderForm .offer-select-field .input-wrap{
+  display:block!important;position:relative!important;width:100%!important;
+}
+#orderForm #offerPicker{display:none!important}
+#orderForm #offerSelect.offer-native-select,
+#orderForm .offer-select-field #offerSelect{
+  position:static!important;display:block!important;visibility:visible!important;
+  opacity:1!important;clip:auto!important;clip-path:none!important;
+  pointer-events:auto!important;overflow:visible!important;
+  width:100%!important;height:44px!important;min-height:44px!important;max-height:44px!important;
+  box-sizing:border-box!important;margin:0!important;
+  padding:0 13px!important;border:1px solid #d8d8d8!important;border-radius:10px!important;
+  background-color:#fff!important;color:#111!important;
+  font-family:inherit!important;font-size:13px!important;font-weight:700!important;
+  line-height:1.4!important;text-align:right!important;direction:rtl!important;
+  appearance:auto!important;-webkit-appearance:menulist!important;
+}
+@media(max-width:720px){
+  #orderForm #offerSelect.offer-native-select,
+  #orderForm .offer-select-field #offerSelect{
+    height:42px!important;min-height:42px!important;max-height:42px!important;
+    font-size:13px!important;padding:0 12px!important;border-radius:9px!important;
+  }
+}
+</style>
+<script id="shopnivo-offer-native-select-sync-v3">
+(()=> {
+ const select=document.getElementById('offerSelect');
+ if(!select)return;
+ // The native select is the visible control; remove the decorative custom picker
+ // so Android/iOS always open the actual current options.
+ const picker=document.getElementById('offerPicker');
+ if(picker)picker.remove();
+ select.classList.remove('offer-native-select');
+ select.addEventListener('change',()=>{
+   if(typeof updateOfferPicker==='function')updateOfferPicker();
+ });
+})();
+</script>
+
 </body>
 </html>
