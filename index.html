@@ -1371,5 +1371,73 @@ button:disabled{opacity:.55;cursor:not-allowed;}
  });
 })();
 </script>
+
+<!-- SHOPNIVO FINAL FIELD ALIGNMENT 2026-11-20 -->
+<style id="shopnivo-final-field-alignment">
+/* One consistent control system for the order form */
+#orderForm .input-wrap{position:relative;display:flex;align-items:center;min-width:0}
+#orderForm .input-wrap .ico{
+  position:absolute!important;right:14px!important;left:auto!important;
+  top:50%!important;transform:translateY(-50%)!important;
+  width:20px!important;height:20px!important;display:flex!important;
+  align-items:center!important;justify-content:center!important;
+  color:#111!important;opacity:1!important;z-index:1!important;
+}
+#orderForm .input-wrap .ico svg,
+#orderForm .input-wrap .ico .svg-icon{
+  width:19px!important;height:19px!important;
+  stroke:#111!important;color:#111!important;opacity:1!important;
+}
+#orderForm .input-wrap input,
+#orderForm .input-wrap select,
+#orderForm .input-wrap textarea{
+  width:100%!important;min-width:0!important;
+  height:54px!important;min-height:54px!important;max-height:54px!important;
+  box-sizing:border-box!important;
+  padding:0 46px 0 14px!important;
+  border:1px solid #d8d8d8!important;border-radius:12px!important;
+  background:#fff!important;color:#111!important;
+  font-size:15px!important;line-height:1.45!important;
+  text-align:right!important;direction:rtl!important;
+}
+#orderForm .input-wrap textarea{
+  resize:none!important;overflow:auto!important;
+  padding-top:14px!important;padding-bottom:10px!important;
+}
+#orderForm #city{
+  direction:rtl!important;text-align:right!important;
+  padding-right:46px!important;padding-left:14px!important;
+}
+#orderForm #city::placeholder,
+#orderForm #fullname::placeholder,
+#orderForm #address::placeholder,
+#orderForm #phone::placeholder{color:#888!important;opacity:1!important}
+#orderForm .input-wrap input:focus,
+#orderForm .input-wrap select:focus,
+#orderForm .input-wrap textarea:focus{
+  border-color:#111!important;box-shadow:0 0 0 3px #11111112!important;
+}
+#orderForm .field label{line-height:1.5!important}
+#orderForm .offer-select-field .input-wrap select{
+  height:54px!important;min-height:54px!important;max-height:54px!important;
+  padding:0 14px!important;text-align:center!important;
+  font-weight:800!important;font-size:15px!important;
+}
+#orderForm .offer-select-field .input-wrap .ico{display:none!important}
+#orderForm .error{margin-top:4px!important}
+@media(max-width:720px){
+  #orderForm .input-wrap input,
+  #orderForm .input-wrap select,
+  #orderForm .input-wrap textarea{
+    height:52px!important;min-height:52px!important;max-height:52px!important;
+    font-size:14px!important;border-radius:11px!important;
+  }
+  #orderForm .input-wrap .ico{right:12px!important}
+  #orderForm .input-wrap .ico svg,
+  #orderForm .input-wrap .ico .svg-icon{width:18px!important;height:18px!important}
+  #orderForm .offer-select-field .input-wrap select{height:52px!important;min-height:52px!important;max-height:52px!important}
+}
+</style>
+
 </body>
 </html>
